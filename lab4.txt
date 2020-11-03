@@ -1,0 +1,82 @@
+Jerry Yang 004384352
+Assignment 4 Lab
+
+
+1) Verifying the problem
+Commands:
+/usr/bin/ls -A
+/usr/bin/ls -a
+/usr/bin/ls -a -A
+/usr/bin/ls --version
+
+Issue is as described, -a -A modifier is printing out the same way as -a, where
+it should be printing like -A.
+Version is 8.22
+
+2)Installing 8.29
+Commands:
+wget ftp://ftp.gnu.org/gnu/coreutils/coreutils-8.29.tar.xz.sig
+wget ftp://ftp.gnu.org/gnu/coreutils/coreutils-8.29.tar.xz
+wget https://ftp.gnu.org/gnu/gnu-keyring.gpg
+
+Use the wget command to download all the necceary files (8.29 Coreutils version,
+signiture, and the keyring).
+
+Commands:
+gpg --verify --keyring ./gnu-keyring.gpg coreutils-8.29.tar.xz.sig
+
+Output:
+gpg: Signature made Wed 27 Dec 2017 10:29:05 AM PST using RSA key ID 306037D9
+gpg: Good signature from "Pádraig Brady <P@draigBrady.com>"
+gpg:                 aka "Pádraig Brady <pbrady@redhat.com>"
+gpg:                 aka "Pádraig Brady <pixelbeat@gnu.org>"
+gpg: WARNING: This key is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: 6C37 DC12 121A 5006 BC1D  B804 DF6F D971 3060 37D9
+
+Warning is only because its a public key we haven't verified on this machine.
+
+3) Install Coreutils
+Commands:
+tar -xvf coreutils-8.29.tar.xz
+cd coreutils-8.29
+vi INSTALL
+./configure
+make
+make install
+
+Extract the coreutils-8.29 version directory from the tarball, enter it, use vi
+to read the install file and follow the instructions. Configure will configure
+the package and create the makefile we need. Make compiles the package. Make
+install used to install the files.
+
+
+4) Reproduce Bug
+Commands:
+cd src
+./ls -a
+./ls -A
+./ls -a -A
+
+-a -A assignemnt still prints out '.' and '..' like the -a command.
+Bug still exists.
+
+
+5) installing patch
+Commands:
+vi temp
+patch -p1 < temp
+./configure
+make
+make install
+
+Vi is used to copy the patch from online into a file on our server.
+Patch applies the diff changes to the ./src/ls.c file
+./configure congiures the software so it can be built
+make actually builds the software/patch so we can use the commands
+make install installs the package.
+
+6) Checking
+./src/ls -a -A
+
+Doesn't print out the '.' and '..' directories as we wanted, bug is fixed!

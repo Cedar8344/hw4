@@ -1,0 +1,57 @@
+Jerry Yang 004385352
+Assignment 4
+
+Q1) Yes, performance is improved. Originally there was an 'if' statement that
+is executed with an assignment inside. Now, with the bugfix/patch, the command
+will directly run the assignment without the if statement. This, first, gives
+us the output we expect when running ls -a -A and also makes improves 
+performance in general since it doesn't need to the the check for 
+ignore_mode when running ls.
+
+Q2) Issue is, obviously, that we have patched a released/official version 
+of Core utils and we might have changed something else in the patch we 
+didn't account for when fixing our -a -A error. Otherwise we need to watch 
+our for strange behavoir  from the ls -A command since that is the thing 
+we changed. Realistically there isn't much to watch our for since we only
+really removed 1 line and changed the identation on another.
+
+Q3) Command: 
+wget https://web.cs.ucla.edu/classes/fall20/cs35L/assign
+chmod +x randline.py
+./randline.py /dev/null
+
+Output:
+Traceback (most recent call last):
+  File "./randline.py", line 70, in <module>
+    main()
+  File "./randline.py", line 64, in main
+    sys.stdout.write(generator.chooseline())
+  File "./randline.py", line 34, in chooseline
+    return random.choice(self.lines)
+  File "/usr/lib64/python2.7/random.py", line 274, in choice
+    return seq[int(self.random() * len(seq))]  
+		# raises IndexError if seq is empty
+IndexError: list index out of range
+web.cs.ucla.edu/classes/fall20/cs35L/assignTraceback 
+(most recent call last):://
+-bash: syntax error near unexpected token `('
+
+The problem here is that we are trying to run the chooseline()
+function on an empty file, which throws an error when random.choice
+is called with an empty list as the input --> IndexError
+
+Q4)Commands:
+pyhton 3 randline.py
+
+Output:
+  File "/w/home.14/ms/ugrad/jerry/HW4/randline.py", line 65
+    except IOError as (errno, strerror):
+                      ^
+SyntaxError: invalid syntax
+
+This is wrong b/c the syntax has changed from pyhton versions.
+In pytheon2, exceptions are iterable so you can look over 
+parameters given to the exception. Python 3 removed this for 
+clarity.
+Correct version should be:
+    except IOError as err: #err = name, can be anything
